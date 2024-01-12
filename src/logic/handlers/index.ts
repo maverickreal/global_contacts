@@ -1,0 +1,1 @@
+export { handleSignup } from "./registeration/registeration";

@@ -1,1 +1,0 @@
-export { router } from './controller/Controller';
