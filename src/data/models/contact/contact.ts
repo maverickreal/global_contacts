@@ -11,7 +11,13 @@ interface contactType {
 
 export interface ContactDto extends Optional<contactType, 'id' | 'userId'> { };
 
-export class Contact extends Model<contactType, ContactDto> { };
+export class Contact extends Model<contactType, ContactDto> {
+    declare id: string;
+    declare firstName: string;
+    declare lastName?: string;
+    declare phoneNumber: string;
+    declare userId: string
+};
 
 Contact.init({
     id: {
@@ -47,4 +53,4 @@ Contact.init({
             key: 'id'
         }*/
     }
-}, { sequelize: connection, tableName: 'contact' })
+}, { sequelize: connection, tableName: 'contacts', timestamps: false })

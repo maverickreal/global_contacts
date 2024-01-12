@@ -7,11 +7,19 @@ interface UserType {
     lastName: string;
     email?: string;
     phoneNumber: string;
+    password: string;
 };
 
 export interface UserDto extends Optional<UserType, 'id'> { };
 
-export class User extends Model<UserType, UserDto> { };
+export class User extends Model<UserType, UserDto> {
+    declare id: string;
+    declare firstName: string;
+    declare lastName: string;
+    declare email?: string;
+    declare phoneNumber: string;
+    declare password: string;
+};
 
 User.init({
     id: {
@@ -44,5 +52,10 @@ User.init({
         allowNull: false,
         validate: { isNumeric: true },
         field: 'phone_number'
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: { notEmpty: true }
     }
-}, { sequelize: connection, tableName: 'user' });
+}, { sequelize: connection, tableName: 'users', timestamps: false });

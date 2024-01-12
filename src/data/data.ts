@@ -6,4 +6,4 @@ import './models/spam/spam';
 User.hasMany(Contact);
 Contact.belongsTo(User);
 
-connection.sync(); // ??? try alter maybe
+connection.sync({ force: true }); // ??? try alter maybe

@@ -9,7 +9,11 @@ interface spamType {
 
 export interface SpamDto extends Optional<spamType, 'id'> { };
 
-export class Spam extends Model<spamType, SpamDto> { };
+export class Spam extends Model<spamType, SpamDto> {
+    declare id: string;
+    declare phoneNumber: string;
+    declare spamCount: bigint;
+};
 
 Spam.init({
     id: {
@@ -31,4 +35,4 @@ Spam.init({
         defaultValue: 0,
         field: 'spam_count'
     }
-}, { sequelize: connection, tableName: 'spam' });
+}, { sequelize: connection, tableName: 'spams', timestamps: false });
