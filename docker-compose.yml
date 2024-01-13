@@ -1,5 +1,5 @@
 services:
-  postgres:
+  database:
     image: postgres:latest
     container_name: database
     environment:
@@ -9,19 +9,25 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  server:
-    build: .
-    container_name: server
+      - database_data:/var/lib/postgresql/data
+  app:
+    container_name: app
+    environment:
+      PORT: 8080
+      DB_NAME: global_contacts 
+      DB_USER: username 
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_PASSWORD: password 
+      DB_DRIVER: postgres
     ports:
       - "8080:8080"
+    build: .
     volumes:
       - app_data:/app/data
-    command: npm install && echo 'Hiiiiiiiii' && npm run build && npm run start
     depends_on:
-      - postgres
+      - database
 
 volumes:
-  postgres_data:
+  database_data:
   app_data:
