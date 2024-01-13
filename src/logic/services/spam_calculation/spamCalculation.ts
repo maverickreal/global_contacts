@@ -4,7 +4,7 @@ import { Spam } from "../../../data/models/spam/spam";
 import { getSpamRating } from "../../utils";
 
 interface mergeCountsMapItem {
-    spamCount: number; save_count: number;
+    spam_count: number; save_count: number;
 }
 
 const getSpams = (phoneNumbers: string[]) => Spam.findAll({
@@ -30,23 +30,22 @@ export const spamCalculations = async (contacts: Contact[]): Promise<[Contact, s
     const map: Record<string, mergeCountsMapItem> = {};
 
     for (let spam of spams) {
-        if (map[spam.phoneNumber]) {
-            map[spam.phoneNumber].spamCount += spam.spamCount;
+        if (map[spam.dataValues.phone_number]) {
+            map[spam.dataValues.phone_number].spam_count += spam.dataValues.spam_count;
         } else {
-            map[spam.phoneNumber] = { spamCount: spam.spamCount, save_count: 0 };
+            map[spam.dataValues.phone_number] = { spam_count: spam.dataValues.spam_count, save_count: 0 };
         }
     }
 
     for (let contactSaveCount of contactSaveCounts) {
-        if (map[contactSaveCount.phoneNumber]) {
-            map[contactSaveCount.phoneNumber].save_count += contactSaveCount.saveCount;
+        if (map[contactSaveCount.dataValues.phone_number]) {
+            map[contactSaveCount.dataValues.phone_number].save_count += contactSaveCount.dataValues.save_count;
         } else {
-            map[contactSaveCount.phoneNumber] = { spamCount: 0, save_count: contactSaveCount.save_count };
+            map[contactSaveCount.dataValues.phone_number] = { spam_count: 0, save_count: contactSaveCount.dataValues.save_count };
         }
     }
-
-    return contacts.map((contact: Contact) => {
-        const rating: string = getSpamRating(map[contact.phoneNumber].spamCount || 0, map[contact.phoneNumber].save_count || 0);
+    return contacts.map((contact: any) => {
+        const rating: string = getSpamRating(map[contact.dataValues.phone_number].spam_count, map[contact.dataValues.phone_number].save_count);
         return [contact, rating];
     });
 }

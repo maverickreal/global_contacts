@@ -17,7 +17,7 @@ export const handleSignup = async (req: Request, res: Response) => {
         res.status(200).send({ token });
     } catch (err) {
         console.log(err);
-        res.status(400).send({ error: 'One of the required fields is missing.' });
+        res.status(400).send({ error: 'One of the required fields is missing/incorrect.' });
     }
 };
 
@@ -25,8 +25,11 @@ export const handleSignin = async (req: Request, res: Response) => {
     try {
         const fields: UserDto = req.body;
         const orItems: any = [];
-        if (fields.email) orItems.push({ email: fields.email });
+
         if (fields.phoneNumber) orItems.push({ phoneNumber: fields.phoneNumber });
+        else if (fields.email) orItems.push({ email: fields.email });
+        else return res.status(400).send({ error: 'One of the required fields is missing/incorrect.' });
+
         const userExists: User | null = await User.findOne({
             where: {
                 [Op.or]: orItems,

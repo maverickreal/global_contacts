@@ -4,7 +4,7 @@ import { Spam } from "../../../data/models/spam/spam";
 export const handleMarkSpam = async (req: Request, res: Response) => {
     try {
         const phoneNumber = req.query.phoneNumber as string;
-        const userId: string = req.body.user;
+        const userId: string = req.body.user.id;
         const [spam, created] = await Spam.findOrCreate({
             where: { phoneNumber, userId }
         });

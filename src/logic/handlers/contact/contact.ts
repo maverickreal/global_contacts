@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { User, UserDto } from "../../../data/models/user/User";
 import { Contact, ContactDto } from "../../../data/models/contact/contact";
-import { Op, col, literal } from "sequelize";
+import { Op, col, fn, literal } from "sequelize";
 import { spamCalculations } from "../../services/spam_calculation/spamCalculation";
 
 interface InterResult {
@@ -13,6 +13,9 @@ export const handleCreateContact = async (req: Request, res: Response) => {
     try {
         const { firstName, lastName, phoneNumber } = req.body;
         const userId = req.body.user.id;
+
+        if (!firstName || !lastName || !phoneNumber)
+            return res.status(400).send({ error: 'Missing required fields.' });
 
         const [contact, created] = await Contact.findOrBuild({
             where: {
@@ -54,7 +57,7 @@ const searchContactByName = async (name: string): Promise<InterResult> => {
 const searchContactByPhone = async (phoneNumber: string, thisUser: UserDto): Promise<InterResult> => {
     const thatUser: User | null = await User.findOne({ where: { phoneNumber } });
     if (thatUser) {
-        const isThisUserThatUserscontact = await Contact.findOne({
+        const isThisUserThatUsersContact = await Contact.count({
             where: {
                 userId: thatUser.id,
                 phoneNumber: thisUser.phoneNumber
@@ -64,18 +67,22 @@ const searchContactByPhone = async (phoneNumber: string, thisUser: UserDto): Pro
             status: 200, body: {
                 name: `${thatUser.firstName} ${thatUser.lastName}`,
                 phoneNumber: thatUser.phoneNumber,
-                email: (isThisUserThatUserscontact ? thatUser.email : '')
+                email: (isThisUserThatUsersContact ? thatUser.email : '')
             }
         };
     }
-    const contacts: Contact[] = await Contact.findAll({ where: { phoneNumber }, attributes: [`concat(${col('first_name')}, ' ', ${col('last_name')})`] });
+    const contacts: Contact[] = await Contact.findAll({
+        where: { phoneNumber }, attributes: [
+            [fn('concat', col('first_name'), ' ', col('last_name')), 'fullName']
+        ]
+    });
     const body: [Contact, string][] = await spamCalculations(contacts);
     return { status: 200, body };
 }
 
 export const handleSearchContact = async (req: Request, res: Response) => {
     try {
-        const thisUser: UserDto = req.body;
+        const thisUser: UserDto = req.body.user;
         const { name, phoneNumber } = req.query;
         let interRes: InterResult = { status: 400, body: { error: 'Name or phone is required.' } };
         if (name) interRes = await searchContactByName(name.toString());

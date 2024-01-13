@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { connection } from "../../connection/connection";
+import { phoneNumberCheck } from "../../../logic/utils";
 
 interface spamType {
     id: string;
@@ -25,9 +26,8 @@ Spam.init({
     },
     phoneNumber: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
-        validate: { isNumeric: true },
+        validate: { isNumeric: true, phoneNumberCheck },
         field: 'phone_number'
     },
     userId: {

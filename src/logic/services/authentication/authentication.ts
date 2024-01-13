@@ -11,7 +11,7 @@ export const assignToken = (user: User) => {
 
 export const invalidate = (userId: string) => delete uidToJwt[userId];
 
-export const auth = (token: string) => { // ???
+export const auth = (token: string) => {
     const user = verify(token, secret) as UserDto;
     const realToken = uidToJwt[user.id!];
     return (realToken === token ? user : null);

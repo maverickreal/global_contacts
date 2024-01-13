@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { connection } from "../../connection/connection";
+import { phoneNumberCheck } from "../../../logic/utils";
 
 interface contactType {
     id: string,
@@ -41,7 +42,9 @@ Contact.init({
     phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
-        validate: { isNumeric: true },
+        validate: {
+            isNumeric: true, phoneNumberCheck
+        },
         field: 'phone_number'
     },
     userId: {

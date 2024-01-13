@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import { connection } from '../../connection/connection';
+import { phoneNumberCheck } from '../../../logic/utils';
 
 interface UserType {
     id: string;
@@ -50,7 +51,7 @@ User.init({
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
-        validate: { isNumeric: true },
+        validate: { isNumeric: true, phoneNumberCheck },
         field: 'phone_number'
     },
     password: {

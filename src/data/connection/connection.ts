@@ -9,7 +9,7 @@ const connection = new Sequelize({
     host: DB_HOST,
     port: Number(DB_PORT),
     dialect: DB_DRIVER as Dialect,
-    // logging: false, // ???
+    // logging: false
 });
 
 export { connection };
