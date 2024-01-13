@@ -44,7 +44,6 @@ export const handleSignin = async (req: Request, res: Response) => {
 
 export const handleSignout = (req: Request, res: Response) => {
     try {
-        console.log('Invalidating', req.body.user);
         invalidate(req.body.user.id);
         res.status(200).send({ message: 'Successfully signed out.' });
     } catch (err) {

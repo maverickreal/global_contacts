@@ -47,10 +47,6 @@ Contact.init({
     userId: {
         type: DataTypes.UUID,
         allowNull: false,
-        field: 'user_id',
-        /*references: {
-            model: 'user',
-            key: 'id'
-        }*/
+        field: 'UserId'
     }
 }, { sequelize: connection, tableName: 'contacts', timestamps: false })

@@ -11,7 +11,6 @@ export const tokenToUserAuth = (req: Request, res: Response, next: NextFunction)
         const user: UserDto | null = auth(token);
         if (!user) return res.status(401).send({ error: 'Unauthorized' });
         req.body.user = user;
-        console.log('bug', user);
         next();
     } catch (err) {
         console.log(err);

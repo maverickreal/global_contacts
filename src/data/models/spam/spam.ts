@@ -4,7 +4,7 @@ import { connection } from "../../connection/connection";
 interface spamType {
     id: string;
     phoneNumber: string;
-    spamCount: bigint;
+    spamCount: number;
 };
 
 export interface SpamDto extends Optional<spamType, 'id'> { };
@@ -12,7 +12,7 @@ export interface SpamDto extends Optional<spamType, 'id'> { };
 export class Spam extends Model<spamType, SpamDto> {
     declare id: string;
     declare phoneNumber: string;
-    declare spamCount: bigint;
+    declare spamCount: number;
 };
 
 Spam.init({
@@ -31,7 +31,7 @@ Spam.init({
         field: 'phone_number'
     },
     spamCount: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.INTEGER,
         defaultValue: 0,
         field: 'spam_count'
     }

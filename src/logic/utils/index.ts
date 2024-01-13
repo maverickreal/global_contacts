@@ -1,0 +1,1 @@
+export { getSpamRating } from './spam_score/spamScore';
