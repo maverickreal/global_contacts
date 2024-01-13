@@ -8,12 +8,11 @@ interface mergeCountsMapItem {
 }
 
 const getSpams = (phoneNumbers: string[]) => Spam.findAll({
-    where: {
-        phoneNumber: {
-            [Op.in]: phoneNumbers
-        }
-    }, attributes: ['phone_number', 'spam_count']
+    group: col('phone_number'),
+    having: where(col('phone_number'), { [Op.in]: phoneNumbers }),
+    attributes: ['phone_number', [fn('COUNT', 0), 'spam_count']]
 });
+
 
 const getContactSaveCounts = (phoneNumbers: string[]) => Contact.findAll({
     group: col('phone_number'),
@@ -25,7 +24,7 @@ export const spamCalculations = async (contacts: Contact[]): Promise<[Contact, s
     const phoneNumbers: string[] = contacts.map(
         (contact: any) => contact.dataValues['phone_number']
     );
-    const spams: Spam[] = await getSpams(phoneNumbers);
+    const spams: any[] = await getSpams(phoneNumbers);
     const contactSaveCounts: any[] = await getContactSaveCounts(phoneNumbers);
 
     const map: Record<string, mergeCountsMapItem> = {};

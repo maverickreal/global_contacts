@@ -4,15 +4,15 @@ import { connection } from "../../connection/connection";
 interface spamType {
     id: string;
     phoneNumber: string;
-    spamCount: number;
+    userId: string;
 };
 
-export interface SpamDto extends Optional<spamType, 'id'> { };
+export interface SpamDto extends Optional<spamType, 'id' | 'userId'> { };
 
 export class Spam extends Model<spamType, SpamDto> {
     declare id: string;
     declare phoneNumber: string;
-    declare spamCount: number;
+    declare userId: string;
 };
 
 Spam.init({
@@ -30,9 +30,10 @@ Spam.init({
         validate: { isNumeric: true },
         field: 'phone_number'
     },
-    spamCount: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
-        field: 'spam_count'
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        field: 'UserId'
     }
+
 }, { sequelize: connection, tableName: 'spams', timestamps: false });
