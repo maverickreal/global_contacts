@@ -25,12 +25,11 @@ services:
       - DB_PORT=5432
       - DB_PASSWORD=password
       - DB_DRIVER=postgres
-
     ports:
       - "8080:8080"
     volumes:
       - .:/app
-    command: npm install && npx tsc && npm run start
+    command: npm install && npm run build && npm run start
     depends_on:
       - postgres
 
