@@ -12,26 +12,16 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   server:
-    image: node:latest
     build: .
     container_name: server
-    environment:
-      - PORT=8080
-      - JWT_SECRET_KEY_EXPIRES_IN=7d
-      - JWT_SECRET_KEY=blahblah
-      - DB_NAME=global_contacts
-      - DB_USER=postgres
-      - DB_HOST=127.0.0.1
-      - DB_PORT=5432
-      - DB_PASSWORD=password
-      - DB_DRIVER=postgres
     ports:
       - "8080:8080"
     volumes:
-      - .:/app
-    command: npm install && npm run build && npm run start
+      - app_data:/app/data
+    command: npm install && echo 'Hiiiiiiiii' && npm run build && npm run start
     depends_on:
       - postgres
 
 volumes:
   postgres_data:
+  app_data:
