@@ -2,7 +2,7 @@
 
 - launch the application using:
 ```
-chmod +x ;
+chmod +x run.sh ;
 ./run.sh ;
 ```
 
